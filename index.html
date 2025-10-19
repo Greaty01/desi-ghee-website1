@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>PureVillage Ghee — Luxury Pure Desi Ghee</title>
+    <meta name="description" content="PureVillage Ghee — Luxury pure desi ghee made the traditional way. Buy 1kg at ₹1200 or 2kg pack at ₹2399. Fresh, pure, golden goodness." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+import { Switch, Route } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import Home from "@/pages/Home";
+import NotFound from "@/pages/not-found";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+import { useState } from "react";
+import Header from "@/components/Header";
+import HeroSection from "@/components/HeroSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import Footer from "@/components/Footer";
+
+export default function Home() {
+  const [cartItems, setCartItems] = useState<Array<{ quantity: number; total: number }>>([]);
+
+  const handleAddToCart = (quantity: number, total: number) => {
+    setCartItems(prev => [...prev, { quantity, total }]);
+    console.log('Cart updated:', { quantity, total });
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <HeroSection onAddToCart={handleAddToCart} />
+        <TestimonialsSection />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+import { Phone } from "lucide-react";
+import logoImage from "@assets/stock_images/ghee_pouring_into_bo_72094fd1.jpg";
+
+export default function Header() {
+  return (
+    <header className="border-b border-border">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="flex items-center justify-between py-4 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-gradient-to-b from-white to-[hsl(40,75%,98%)] shadow-md overflow-hidden">
+              <img 
+                src={logoImage} 
+                alt="PureVillage Ghee Logo - Ghee Pouring into Bowl" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-xl font-semibold tracking-wide" data-testid="text-brand-name">
+                PureVillage Ghee
+              </h1>
+              <p className="text-xs text-muted-foreground" data-testid="text-brand-tagline">
+                Luxury Pure — Tradition in every jar
+              </p>
+            </div>
+          </div>
+          <a 
+            href="tel:+917042061974" 
+            className="flex items-center gap-2 text-sm hover-elevate active-elevate-2 px-3 py-2 rounded-md"
+            data-testid="link-phone"
+          >
+            <Phone className="w-4 h-4" />
+            <span className="hidden sm:inline font-semibold">+91 70420 61974</span>
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+}
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import ProductCard from "./ProductCard";
+
+interface HeroSectionProps {
+  onAddToCart?: (quantity: number, total: number) => void;
+}
+
+export default function HeroSection({ onAddToCart }: HeroSectionProps) {
+  return (
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6 items-start">
+        <Card className="p-6 space-y-4">
+          <div className="text-primary font-bold tracking-wider text-sm" data-testid="text-tagline">
+            Luxury • Pure • Authentic
+          </div>
+          
+          <h2 className="text-3xl lg:text-4xl font-bold leading-tight" data-testid="text-headline">
+            PureVillage — Liquid Gold, Made the Old Way
+          </h2>
+          
+          <p className="text-muted-foreground leading-relaxed" data-testid="text-description">
+            Handmade desi ghee made from farm-fresh cow's milk using slow-cooking and traditional churning. 
+            Rich aroma, golden colour, and wholesome nutrition — perfect for daily cooking and ceremonial use.
+          </p>
+
+          <div className="flex flex-wrap gap-2 pt-2">
+            <Badge className="feat bg-[hsl(35,80%,88%)] text-[hsl(35,50%,30%)] font-semibold px-3 py-1" data-testid="badge-a2-milk">
+              A2 Cow Milk
+            </Badge>
+            <Badge className="feat bg-[hsl(35,80%,88%)] text-[hsl(35,50%,30%)] font-semibold px-3 py-1" data-testid="badge-small-batch">
+              Small-Batch
+            </Badge>
+            <Badge className="feat bg-[hsl(35,80%,88%)] text-[hsl(35,50%,30%)] font-semibold px-3 py-1" data-testid="badge-no-preservatives">
+              No Preservatives
+            </Badge>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4">
+            <Card className="small p-4 space-y-2">
+              <h4 className="font-semibold text-sm" data-testid="text-info-why-title">Why PureVillage?</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed" data-testid="text-info-why-desc">
+                Traditional methods, transparent sourcing, and strict hygiene. We keep it authentic — the taste speaks for itself.
+              </p>
+            </Card>
+            <Card className="small p-4 space-y-2">
+              <h4 className="font-semibold text-sm" data-testid="text-info-shipping-title">Shipping</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed" data-testid="text-info-shipping-desc">
+                Pan-India shipping available. Free shipping on orders above ₹3000.
+              </p>
+            </Card>
+            <Card className="small p-4 space-y-2">
+              <h4 className="font-semibold text-sm" data-testid="text-info-guarantee-title">Guarantee</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed" data-testid="text-info-guarantee-desc">
+                Freshness guaranteed. If you are not satisfied, contact us within 7 days for a refund.
+              </p>
+            </Card>
+          </div>
+        </Card>
+
+        <ProductCard onAddToCart={onAddToCart} />
+      </div>
+    </div>
+  );
+}
+import { useState } from "react";
+import { Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import productImage from "@assets/generated_images/Premium_desi_ghee_jar_684cbb07.png";
+
+const PRICE_1KG = 1200;
+const PRICE_2KG = 2399;
+
+interface ProductCardProps {
+  onAddToCart?: (quantity: number, total: number) => void;
+}
+
+export default function ProductCard({ onAddToCart }: ProductCardProps) {
+  const [quantity, setQuantity] = useState(1);
+  const { toast } = useToast();
+
+  const calculatePrice = (qty: number) => {
+    const pairs = Math.floor(qty / 2);
+    const rem = qty % 2;
+    return pairs * PRICE_2KG + rem * PRICE_1KG;
+  };
+
+  const total = calculatePrice(quantity);
+  const effective = Math.round(total / quantity);
+
+  const changeQty = (delta: number) => {
+    setQuantity(prev => Math.min(20, Math.max(1, prev + delta)));
+  };
+
+  const handleWhatsAppOrder = () => {
+    const msg = encodeURIComponent(
+      `Hello, I want to order PureVillage Ghee - ${quantity} kg. Total: ₹${total}. Please confirm delivery & payment. Name:`
+    );
+    const phone = '917042061974';
+    const url = `https://wa.me/${phone}?text=${msg}`;
+    window.open(url, '_blank');
+  };
+
+  const handleAddToCart = () => {
+    onAddToCart?.(quantity, total);
+    toast({
+      title: "Added to cart",
+      description: `${quantity} kg of PureVillage Ghee (₹${total})`,
+    });
+  };
+
+  const handleDownloadInvoice = () => {
+    const txt = `PureVillage Ghee\nQuantity: ${quantity} kg\nTotal: ₹${total}`;
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'invoice.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <Card className="p-5 space-y-3">
+      <img
+        id="productImage"
+        src={productImage}
+        alt="PureVillage Desi Ghee"
+        className="w-full h-64 object-cover rounded-lg"
+        data-testid="img-product"
+      />
+
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-xs text-muted-foreground">Price</div>
+          <div className="text-2xl font-bold" data-testid="text-price-1kg">
+            ₹{PRICE_1KG} <span className="text-sm text-muted-foreground font-semibold">/ kg</span>
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-xs text-muted-foreground">2kg Special</div>
+          <div className="text-sm line-through text-muted-foreground">₹2599</div>
+          <div className="font-bold text-primary" data-testid="text-price-2kg">Now ₹{PRICE_2KG}</div>
+        </div>
+      </div>
+
+      <div>
+        <label className="font-bold text-sm mb-2 block">Select quantity (kg)</label>
+        <div className="flex items-center gap-2">
+          <Button
+            size="icon"
+            variant="default"
+            onClick={() => changeQty(-1)}
+            disabled={quantity <= 1}
+            data-testid="button-decrease-qty"
+          >
+            <Minus className="w-4 h-4" />
+          </Button>
+          <Input
+            type="number"
+            min="1"
+            max="20"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
+            className="w-20 text-center"
+            data-testid="input-quantity"
+          />
+          <Button
+            size="icon"
+            variant="default"
+            onClick={() => changeQty(1)}
+            disabled={quantity >= 20}
+            data-testid="button-increase-qty"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="pt-2">
+        <div className="text-base font-semibold">Order summary:</div>
+        <div className="mt-1 font-bold text-lg" data-testid="text-total">
+          Total: ₹{total}
+        </div>
+        <div className="text-xs text-muted-foreground mt-1" data-testid="text-effective-price">
+          Effective: ₹{effective}/kg
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 pt-2">
+        <Button 
+          className="w-full bg-[#25D366] hover:bg-[#1da851] text-white font-bold"
+          onClick={handleWhatsAppOrder}
+          data-testid="button-whatsapp"
+        >
+          Buy on WhatsApp
+        </Button>
+        <div className="flex gap-2">
+          <Button 
+            className="flex-1 font-bold"
+            onClick={handleAddToCart}
+            data-testid="button-add-cart"
+          >
+            Add to Cart
+          </Button>
+          <Button 
+            variant="outline"
+            className="flex-1 font-bold"
+            onClick={handleDownloadInvoice}
+            data-testid="button-invoice"
+          >
+            Get Invoice
+          </Button>
+        </div>
+      </div>
+
+      <div className="text-xs text-muted-foreground pt-2">
+        <strong>Note:</strong> Bundle applied automatically (2kg pack = ₹{PRICE_2KG}). For odd quantities we combine packs for best price.
+      </div>
+    </Card>
+  );
+}
+import { Card } from "@/components/ui/card";
+
+export default function TestimonialsSection() {
+  const testimonials = [
+    {
+      id: 1,
+      text: "Best ghee I've used — flavour is unbeatable.",
+      author: "S. Kumar"
+    },
+    {
+      id: 2,
+      text: "Aroma and colour are perfect. Will order again.",
+      author: "R. Singh"
+    }
+  ];
+
+  return (
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-6">
+      <Card className="p-6">
+        <h3 className="text-2xl font-semibold mb-4" data-testid="text-testimonials-title">
+          Testimonials
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {testimonials.map((testimonial) => (
+            <div
+              key={testimonial.id}
+              className="bg-[hsl(35,80%,96%)] p-4 rounded-lg"
+              data-testid={`card-testimonial-${testimonial.id}`}
+            >
+              <p className="text-sm leading-relaxed">
+                "{testimonial.text}"
+              </p>
+              <p className="text-xs text-muted-foreground mt-2 font-medium">
+                — {testimonial.author}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+export default function Footer() {
+  return (
+    <footer className="py-8 mt-8 border-t border-border">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="text-center text-sm text-muted-foreground">
+          © <strong className="font-semibold">PureVillage Ghee</strong> • Made with care • {' '}
+          <a 
+            href="tel:+917042061974" 
+            className="hover-elevate active-elevate-2 px-2 py-1 rounded-md inline-block"
+            data-testid="link-footer-phone"
+          >
+            +91 70420 61974
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+/* Custom hover effects for feature badges and info cards */
+.feat,
+.small {
+  transition: all 0.3s ease;
+}
+
+.feat:hover,
+.small:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Custom button hover effects */
+button,
+.whatsapp {
+  transition: all 0.3s ease;
+}
+
+button:hover,
+.whatsapp:hover {
+  transform: scale(1.05);
+}
+
+/* Specific hover color for primary gold buttons */
+button[class*="bg-primary"]:hover,
+button[class*="variant-default"]:hover {
+  background-color: #b88b35 !important;
+}
+
+/* Product image zoom effect */
+#productImage {
+  transition: transform 0.3s ease;
+}
+
+#productImage:hover {
+  transform: scale(1.05);
+}
